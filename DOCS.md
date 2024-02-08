@@ -5,10 +5,42 @@ This is the backend for the Agios Coptic Calendar. It is a RESTful API that prov
 The API has the following routes and endpoints:
 
 * `/occasions/getAll` - Returns all the occasions in the coptic calendar
+    * Sample response:
+    ```json
+    [
+        {
+            created: Date,
+            date: Date,
+            copticDate: CopticDate,
+            icons: Icon[],
+            stories: Story[],
+            facts: Fact[],
+            id: String,
+            liturgicalInformation: String,
+            name: String,
+            updated: Date
+        }
+    ]
+    ```
 * `/occasions/get/:id` - Returns the occasion with the specified id
+    * Sample response:
+    ```json
+    {
+        created: Date,
+        date: Date,
+        copticDate: CopticDate,
+        icons: Icon[],
+        stories: Story[],
+        facts: Fact[],
+        id: String,
+        liturgicalInformation: String,
+        name: String,
+        updated: Date
+    }
+    ```
 
 ## Data Structure
-
+***Note: A Simple Schema Outline Can Be Found In The Types Folder In The Root Of The Project***
 ### Occasions:
 * `created` - The date the occasion was created
 * `date` - The gregorian calendar date of the occasion
