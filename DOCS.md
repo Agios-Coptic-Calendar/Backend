@@ -13,9 +13,9 @@ The API has the following routes and endpoints:
     * `created` - The date the occasion was created
     * `date` - The gregorian calendar date of the occasion
     * `copticDate` - The coptic calendar date of the occasion,
-    * `icons` - A list of icons that represent the occasion,
-    * `stories` - A list of stories that are associated with the occasion,
-    * `facts` - A list of facts about the occasion,
+    * `icons` - A list of [icons](#icons) that represent the occasion,
+    * `stories` - A list of [stories](#stories) that are associated with the occasion,
+    * `facts` - A list of [facts](#facts-and-highlights) about the occasion,
     * `id` - A unique identifier for the occasion,
     * `liturgicalInformation` - A human friendly description of what occurs on the occasion,
     * `name` - A human friendly name for the occasion,
