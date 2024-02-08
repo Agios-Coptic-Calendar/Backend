@@ -4,27 +4,27 @@ This is the backend for the Agios Coptic Calendar. It is a RESTful API that prov
 ## Routes and Endpoints
 The API has the following routes and endpoints:
 
-    * /occassions/getAll - Returns all the occassions in the coptic calendar
-    * /occassions/get/:id - Returns the occassion with the specified id
+    * /occasions/getAll - Returns all the occasions in the coptic calendar
+    * /occasions/get/:id - Returns the occasion with the specified id
 
 ## Data Structure
 
-### Occassions
-An occassion is a special event in the coptic calendar. It has the following properties:
+### Occasions
+An occasion is a special event in the coptic calendar. It has the following properties:
 
-    * created - The date the occassion was created
-    * date: - The gregorian calendar date of the occassion
-    * copticDate - The coptic calendar date of the occassion,
-    * icons - A list of icons that represent the occassion,
-    * stories - A list of stories that are associated with the occassion,
-    * facts - A list of facts about the occassion,
-    * id - A unique identifier for the occassion,
-    * liturgicalInformation - A human friendly description of what occurs on the occassion,
-    * name - A human friendly name for the occassion,
-    * updated - The date the occassion was last updated
+    * created - The date the occasion was created
+    * date: - The gregorian calendar date of the occasion
+    * copticDate - The coptic calendar date of the occasion,
+    * icons - A list of icons that represent the occasion,
+    * stories - A list of stories that are associated with the occasion,
+    * facts - A list of facts about the occasion,
+    * id - A unique identifier for the occasion,
+    * liturgicalInformation - A human friendly description of what occurs on the occasion,
+    * name - A human friendly name for the occasion,
+    * updated - The date the occasion was last updated
 
 ### Icons
-An icon is an image that represents what happened on a particular occassion. It has the following properties:
+An icon is an image that represents what happened on a particular occasion. It has the following properties:
 
     * caption - A human friendly description of what is depicted in the icon,
     * created - The date the icon was created,
@@ -36,7 +36,7 @@ An icon is an image that represents what happened on a particular occassion. It 
     * updated - The date the icon was last updated
 
 ### Stories
-A story is a narrative of a particular saint or ocassion. It has the following properties:
+A story is a narrative of a particular saint or occasion. It has the following properties:
 
     * created - The date the story was created,
     * highlights - A list of highlights from the story,
