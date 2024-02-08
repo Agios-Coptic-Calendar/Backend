@@ -1,42 +1,31 @@
-# Nitro Minimal Starter
+# Agios Coptic Calendar Backend
+This is the backend for the Agios Coptic Calendar. It is a RESTful API that provides the calendar data in JSON format. The data is based on the Coptic Orthodox Church's calendar.
 
-Look at the [Nitro documentation](https://nitro.unjs.io/) to learn more.
+## Getting Started
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-## Setup
+### Prerequisites
+You will need to have the following installed on your machine:
+- [Node.js](https://nodejs.org/en/)
+- [npm](https://www.npmjs.com/)
+- [bun](https://bun.sh/)
 
-Make sure to install the dependencies:
+### Installing
+1. Clone the repository
+2. Run `bun install` to install the dependencies
+3. Run `bun dev` to start the server
 
-```bash
-# npm
-npm install
+## Built With
+- [Node.js](https://nodejs.org/en/)
+- [Bun](https://bun.sh/)
+- [Nitro](https://nitro.unjs.io/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [PocketBase](https://pocketbase.io/)
 
-# yarn
-yarn install
+## Authors
+- **Jeremiah Ihab Samuel** - [TechLion Dev](https://techlion.dev/)
 
-# pnpm
-pnpm install
-```
+## Documentation
+The API documentation can be found [here](DOCS.md).
 
-## Development Server
-
-Start the development server on <http://localhost:3000>
-
-```bash
-npm run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-npm run build
-```
-
-Locally preview production build:
-
-```bash
-npm run preview
-```
-
-Check out the [deployment documentation](https://nitro.unjs.io/deploy) for more information.
+*Made with ❤️ By Jeremiah Ihab Samuel*
