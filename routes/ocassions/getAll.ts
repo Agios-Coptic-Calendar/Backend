@@ -4,6 +4,10 @@ const pb = new PocketBase('https://agios-calendar.pockethost.io');
 
 import formatRecord from '../../utils/formatRecord';
 
+/**
+ * Retrieves all occasions from the database and formats them.
+ * @returns {Promise<TLD_Response>} A promise that resolves to the formatted occasions.
+ */
 export default async function defineEventHandler(): Promise<TLD_Response>{
     const records = await pb.collection('occasion').getFullList({
         expand: 'copticDate,facts,icons,stories'

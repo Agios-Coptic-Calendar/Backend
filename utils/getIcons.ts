@@ -2,6 +2,11 @@ import generateFileUrl from './generateFileUrl';
 import generateCroppedFileUrl from './generateCroppedFileUrl';
 import getIconagrapher from './getIconagrapher';
 
+/**
+ * Retrieves the formatted icons based on the provided icons array.
+ * @param {Icon[]} icons - The array of icons to be formatted.
+ * @returns {Promise<Icon[]>} - The formatted icons array.
+ */
 export default async function getIcons(icons) {
     if (!icons) return [];
     let formattedIcons = [];

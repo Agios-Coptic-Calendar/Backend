@@ -1,11 +1,14 @@
 import PocketBase from 'pocketbase';
 
-const pb = new PocketBase('https://agios-calendar.pockethost.io');
-
 import getIcons from './getIcons';
 import getStories from './getStories';
 import getFacts from './getFacts';
 
+/**
+ * Formats a record into a specific data structure.
+ * @param record - The record to be formatted.
+ * @returns {Promise<Data>} A Promise that resolves to the formatted data.
+ */
 export default async function formatRecord(record): Promise<Data> {
     let formattedRecord = {
         created: new Date(record.created),

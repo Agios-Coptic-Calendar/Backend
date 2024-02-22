@@ -1,3 +1,8 @@
+/**
+ * Formats an array of highlights by converting the "created" and "updated" properties to Date objects.
+ * @param {Highlight[]} highlights - The array of highlights to be formatted.
+ * @returns {Highlight[]} - The formatted array of highlights.
+ */
 export default async function getHighlights(highlights) {
     if (!highlights) return [];
     let formattedHighlights = [];

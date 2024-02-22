@@ -2,6 +2,11 @@ import PocketBase from 'pocketbase';
 
 const pb = new PocketBase('https://agios-calendar.pockethost.io');
 
+/**
+ * Retrieves the iconagrapher record from the 'iconagraphers' collection based on the provided iconagrapher ID.
+ * @param {Iconagrapher} iconagrapher - The ID of the iconagrapher.
+ * @returns {Promise<Iconagrapher>} - The iconagrapher record if found, otherwise an empty string.
+ */
 export default async function getIconagrapher(iconagrapher) {
     if (!iconagrapher) {
         return "";
