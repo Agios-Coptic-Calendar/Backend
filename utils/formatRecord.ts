@@ -3,6 +3,7 @@ import PocketBase from 'pocketbase';
 import getIcons from './getIcons';
 import getStories from './getStories';
 import getFacts from './getFacts';
+import { getReadings } from './getReadings';
 
 /**
  * Formats a record into a specific data structure.
@@ -27,6 +28,7 @@ export default async function formatRecord(record): Promise<Data> {
         liturgicalInformation: record.liturgicalInformation,
         name: record.name,
         updated: new Date(record.updated),
+        readings: await getReadings(new Date(record.date))
     }
 
     return formattedRecord;

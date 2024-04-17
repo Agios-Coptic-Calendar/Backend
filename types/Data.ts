@@ -8,5 +8,4 @@ type Data = {
     id: String,
     liturgicalInformation: String,
     name: String,
-    updated: Date
 }
