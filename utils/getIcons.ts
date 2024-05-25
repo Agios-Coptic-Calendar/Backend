@@ -17,6 +17,7 @@ export default async function getIcons(icons) {
             name: icon.name,
             updated: new Date(icon.updated),
             caption: icon.caption,
+            story: icon.story,
             image: await generateFileUrl(icon),
             croppedImage: await generateCroppedFileUrl(icon),
             iconagrapher: await getIconagrapher(icon.iconographer),
