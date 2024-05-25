@@ -13,7 +13,7 @@ export default async function getStories(stories) {
             created: new Date(story.created),
             id: story.id,
             updated: new Date(story.updated),
-            saint: story.saint,
+            saint: story.title,
             story: story.story,
             highlights: await getHighlights(story.highlights),
         }
