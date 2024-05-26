@@ -28,6 +28,7 @@ export default async function formatRecord(record, upcoming): Promise<Data> {
         name: record.name,
         updated: new Date(record.updated),
         readings: await getReadings(new Date(record.date)),
+        isWellKnown: record.isWellKnown,
         upcomingEvents: upcoming ? await getUpcomingEvents(new Date(record.date)) : [],
     }
 
