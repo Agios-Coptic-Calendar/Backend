@@ -9,7 +9,7 @@ import getUpcomingEvents from './getUpcomingEvents';
  * @param record - The record to be formatted.
  * @returns {Promise<Data>} A Promise that resolves to the formatted data.
  */
-export default async function formatRecord(record): Promise<Data> {
+export default async function formatRecord(record, upcoming): Promise<Data> {
     let formattedRecord = {
         created: new Date(record.created),
         date: new Date(record.date),
@@ -28,7 +28,7 @@ export default async function formatRecord(record): Promise<Data> {
         name: record.name,
         updated: new Date(record.updated),
         readings: await getReadings(new Date(record.date)),
-        upcomingEvents: await getUpcomingEvents(new Date(record.date)),
+        upcomingEvents: upcoming ? await getUpcomingEvents(new Date(record.date)) : [],
     }
 
     return formattedRecord;
