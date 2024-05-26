@@ -15,7 +15,7 @@ export default async function getStories(stories) {
             updated: new Date(story.updated),
             saint: story.title,
             story: story.story,
-            highlights: await getHighlights(story.highlights),
+            highlights: await getHighlights(story.highlights)
         }
         formattedStories.push(formattedStory);
     }

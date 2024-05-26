@@ -9,7 +9,7 @@ import formatRecord from '../../../utils/formatRecord';
  * @param event The event object.
  * @returns A Promise that resolves to a TLD_Response object.
  */
-export default async function defineEventHandler(event): Promise<TLD_Response> {
+export default defineEventHandler(async event => {
     const id = getRouterParam(event, 'id')
     let record = await pb.collection('occasion').getOne(id, {
         expand: 'copticDate,facts,icons,stories'
@@ -26,4 +26,4 @@ export default async function defineEventHandler(event): Promise<TLD_Response> {
         status: 200,
         statusText: "OK",
     }
-}
+})
