@@ -26,7 +26,7 @@ export default defineEventHandler(async event => {
     let record = await pb.collection('occasion').getOne(id, {
         expand: 'copticDate,facts,icons,stories,icons.story'
     });
-    let formattedRecord = await formatRecord(record, true);
+    let formattedRecord = await formatRecord(record);
     if (!record) {
         return {
             status: 404,

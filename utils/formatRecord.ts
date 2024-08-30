@@ -12,7 +12,7 @@ import { RecordModel } from "pocketbase";
  */
 export default async function formatRecord(
   record: RecordModel,
-  upcoming: boolean,
+  // upcoming: boolean,
 ): Promise<Data> {
   let formattedRecord = {
     created: new Date(record.created),
@@ -34,9 +34,9 @@ export default async function formatRecord(
     updated: new Date(record.updated),
     readings: await getReadings(new Date(record.date)),
     isWellKnown: record.isWellKnown,
-    upcomingEvents: upcoming
-      ? await getUpcomingEvents(new Date(record.date))
-      : [],
+    // upcomingEvents: upcoming
+    //   ? await getUpcomingEvents(new Date(record.date))
+    //   : [],
   };
 
   return formattedRecord;

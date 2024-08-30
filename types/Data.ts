@@ -8,5 +8,5 @@ type Data = {
     id: String,
     liturgicalInformation: String,
     name: String,
-    upcomingEvents: Object[],
+    // upcomingEvents: Object[],
 }

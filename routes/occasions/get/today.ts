@@ -27,7 +27,7 @@ export default async function defineEventHandler(event): Promise<TLD_Response> {
   });
   let formattedRecords = [];
   for (let record of records) {
-    formattedRecords.push(await formatRecord(record, true));
+    formattedRecords.push(await formatRecord(record));
   }
   return {
     data: formattedRecords,
