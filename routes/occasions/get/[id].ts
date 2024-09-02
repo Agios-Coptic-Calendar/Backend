@@ -24,7 +24,7 @@ export default defineEventHandler(async event => {
       }
     const id = getRouterParam(event, 'id')
     let record = await pb.collection('occasion').getOne(id, {
-        expand: 'copticDate,facts,icons,stories,icons.story'
+        expand: 'copticDate,facts,icons,stories,icons.story,notables,notables.copticDate',
     });
     let formattedRecord = await formatRecord(record);
     if (!record) {

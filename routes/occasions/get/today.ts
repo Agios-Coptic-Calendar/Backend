@@ -22,8 +22,8 @@ export default async function defineEventHandler(event): Promise<TLD_Response> {
     return
   }
   const records = await pb.collection("occasion").getFullList({
-    expand: "copticDate,facts,icons,stories",
-    filter: 'date ~ "' + new Date().toISOString().split("T")[0] + '"',
+    expand: 'copticDate,facts,icons,stories,icons.story,notables,notables.copticDate',
+    filter: 'date ?~ "' + new Date().toISOString().split("T")[0] + '"',
   });
   let formattedRecords = [];
   for (let record of records) {

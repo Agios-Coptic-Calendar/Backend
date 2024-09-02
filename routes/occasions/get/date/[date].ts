@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
   let record = await pb
     .collection("occasion")
     .getFirstListItem(`date ?~ "${date}"`, {
-      expand: "copticDate,facts,icons,stories,icons.story",
+      expand: 'copticDate,facts,icons,stories,icons.story,notables,notables.copticDate',
     });
   let formattedRecord = await formatRecord(record);
   if (!record) {

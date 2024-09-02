@@ -22,7 +22,7 @@ export default async function defineEventHandler(event): Promise<TLD_Response>{
         return
       }
     const records = await pb.collection('occasion').getFullList({
-        expand: 'copticDate,facts,icons,stories'
+      expand: 'copticDate,facts,icons,stories,icons.story,notables,notables.copticDate',
     });
     let formattedRecords = [];
     for (let record of records) {
