@@ -1,4 +1,4 @@
-import PocketBase from "pocketbase";
+import PocketBase, { RecordModel } from "pocketbase";
 
 const pb = new PocketBase("https://agios-calendar.pockethost.io");
 
@@ -23,18 +23,36 @@ export default defineEventHandler(async (event) => {
     return "OK";
   }
   const date = getRouterParam(event, "date");
-  let record = await pb
+  const dateIn10Days = new Date(new Date(date).getTime() + 10 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+  
+  let record: RecordModel;
+  let res = await pb
     .collection("occasion")
-    .getFirstListItem(`date ?~ "${date}"`, {
+    .getList(1, 10, {
+      filter: `date >= "${date}" && date <= "${dateIn10Days}"`,
       expand: 'copticDate,facts,icons,stories,icons.story,notables,notables.copticDate',
     });
-  let formattedRecord = await formatRecord(record);
-  if (!record) {
+  if (res.totalItems == 0) {
     return {
       status: 404,
       statusText: "Not Found",
     };
   }
+  
+  record = res.items[0];
+  let formattedRecord = await formatRecord(record);
+
+  let notables = [];
+  for (let i = 0; i < res.items.length; i++) {
+    if (res.items[i].notables.length > 0) {
+      notables = notables.concat(res.items[i].expand.notables);
+    }
+  }
+
+  if (notables.length > 0) {
+    formattedRecord.notables = notables
+  }
+
   return {
     data: formattedRecord,
     status: 200,
