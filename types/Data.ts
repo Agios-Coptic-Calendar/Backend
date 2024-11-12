@@ -8,5 +8,6 @@ type Data = {
     id: String,
     liturgicalInformation: String,
     name: String,
+    notables: any[],
     // upcomingEvents: Object[],
 }
