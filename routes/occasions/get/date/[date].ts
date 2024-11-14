@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
     .collection("occasion")
     .getList(1, 10, {
       filter: `date >= "${date}" && date <= "${dateIn10Days}"`,
-      expand: 'copticDate,facts,icons,stories,icons.story,notables,notables.copticDate',
+      expand: 'copticDate,facts,icons,stories,icons.story,notables,notables.copticDate,notables.facts,notables.icons,notables.stories,notables.icons,notables.icons.story',
     });
   if (res.totalItems == 0) {
     return {
