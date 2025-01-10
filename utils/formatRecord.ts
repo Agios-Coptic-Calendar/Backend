@@ -22,6 +22,7 @@ export default async function formatRecord(
       day: record.expand.copticDate?.day,
       id: record.expand.copticDate?.id,
       month: record.expand.copticDate?.month,
+      year: record.expand.copticDate?.year,
       updated: new Date(record.expand.copticDate?.updated),
       gregorianDate: new Date(record.expand.copticDate?.gregorianDate),
     },
