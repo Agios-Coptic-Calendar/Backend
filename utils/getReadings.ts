@@ -36,7 +36,6 @@ export async function getReadings(date) {
     }
     for (let j = 0; j < section.subSections.length; j++) {
       let subSection = section.subSections[j];
-      console.log(subSection.title);
 
       for (let k = 0; k < subSection.readings.length; k++) {
         let reading = subSection.readings[k];
