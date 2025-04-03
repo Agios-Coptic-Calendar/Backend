@@ -12,6 +12,6 @@ export default async function generateFileUrl(file) {
     if (!file.image) {
         return "";
     }
-    let fileUrl = `https://agios-calendar.pockethost.io/api/files/nwill40feaquna2/${file.id}/${file.image}`;
+    let fileUrl = `https://pb.agios.co/api/files/nwill40feaquna2/${file.id}/${file.image}`;
     return fileUrl;
 }

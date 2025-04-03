@@ -1,6 +1,6 @@
 import PocketBase from 'pocketbase';
 
-const pb = new PocketBase('https://agios-calendar.pockethost.io');
+const pb = new PocketBase('https://pb.agios.co');
 
 import formatRecord from '../../utils/formatRecord';
 

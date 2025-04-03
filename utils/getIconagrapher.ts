@@ -1,6 +1,6 @@
 import PocketBase from 'pocketbase';
 
-const pb = new PocketBase('https://agios-calendar.pockethost.io');
+const pb = new PocketBase('https://pb.agios.co');
 
 /**
  * Retrieves the iconagrapher record from the 'iconagraphers' collection based on the provided iconagrapher ID.

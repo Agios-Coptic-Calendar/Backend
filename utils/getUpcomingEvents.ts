@@ -1,6 +1,6 @@
 import PocketBase from "pocketbase";
 
-const pb = new PocketBase("https://agios-calendar.pockethost.io");
+const pb = new PocketBase("https://pb.agios.co");
 
 export default async function getUpcomingEvents(date) {
   let occasions: any = await pb.collection("occasion").getList(1, 10, {

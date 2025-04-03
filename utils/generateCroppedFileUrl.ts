@@ -12,6 +12,6 @@ export default async function generateCroppedFileUrl(file) {
     if (!file.croppedImage) {
         return "";
     }
-    let fileUrl = `https://agios-calendar.pockethost.io/api/files/nwill40feaquna2/${file.id}/${file.croppedImage}`;
+    let fileUrl = `https://pb.agios.co/api/files/nwill40feaquna2/${file.id}/${file.croppedImage}`;
     return fileUrl;
 }
