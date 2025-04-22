@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
   try {
 
     // Fetch all records from the TestYearAhead collection
-    const records = await pb.collection('TestYearAhead').getFullList({ 
+    const records = await pb.collection('yearAheadFeasts').getFullList({ 
       sort: 'sortOrder'
     });
 
