@@ -6,11 +6,7 @@ export default defineEventHandler(async (event) => {
   try {
     // Fetch the first and only record from the collection
     const limits = await pb.collection('datePickerLimits').getFirstListItem('');
-
-    // Format dates to ISO string without time
-    const formattedStartDate = new Date(limits.startDate).toLocaleDateString();
-    const formattedEndDate = new Date(limits.endDate).toISOString().split('T')[0];
-
+    
     return {
       status: 200,
       dateLimits: {
