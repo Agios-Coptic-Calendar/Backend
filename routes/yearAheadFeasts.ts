@@ -13,12 +13,11 @@ export default defineEventHandler(async (event) => {
 
   try {
 
-    // Fetch all records from the TestYearAhead collection
+    // Fetch all records from the yearAheadFeasts collection
     const records = await pb.collection('yearAheadFeasts').getFullList({ 
       sort: 'sortOrder'
     });
 
-    // Map the records to desired format
     const transformed = records.map((record) => ({
       feastName: record.feastName.trim(),
       dateString: record.dateString.trim(),
