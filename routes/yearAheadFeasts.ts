@@ -23,11 +23,7 @@ export default defineEventHandler(async (event) => {
       dateString: record.dateString.trim(),
     }));
 
-    return {
-      status: 200,
-      statusText: "OK",
-      yearAheadFeasts: transformed,
-    };
+    return transformed;
   } catch (error) {
     console.error('Error fetching TestYearAhead:', error);
     return {

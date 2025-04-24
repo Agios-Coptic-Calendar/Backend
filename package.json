@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "nitropack": "latest",
-    "pocketbase": "^0.21.1"
+    "pocketbase": "^0.21.1",
+    "semver": "^7.7.1"
   }
 }
