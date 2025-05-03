@@ -1,61 +1,75 @@
-import PocketBase, { RecordModel } from "pocketbase";
+import PocketBase, { RecordModel } from 'pocketbase';
+const pb = new PocketBase('https://pb.agios.co');
 
-const pb = new PocketBase("https://pb.agios.co");
-
-import formatRecord from "../../../../utils/formatRecord";
+import formatRecord from '../../../../utils/formatRecord';
 
 /**
- * Defines the event handler for retrieving an occasion by its ID.
- * @param event The event object.
- * @returns A Promise that resolves to a TLD_Response object.
+ * GET /occasions/get/date/:date   (YYYY-MM-DD)
+ * Returns the occasion whose `date` field falls on that UTC day.
  */
 export default defineEventHandler(async (event) => {
+  /* ----------  CORS pre-flight  ---------- */
   setResponseHeaders(event, {
-    "Access-Control-Allow-Methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Credentials": "true",
-    "Access-Control-Allow-Headers": "*",
-    "Access-Control-Expose-Headers": "*",
+    'Access-Control-Allow-Methods'     : 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    'Access-Control-Allow-Origin'      : '*',
+    'Access-Control-Allow-Credentials' : 'true',
+    'Access-Control-Allow-Headers'     : '*',
+    'Access-Control-Expose-Headers'    : '*',
   });
-  if (getMethod(event) === "OPTIONS") {
-    event.res.statusCode = 204;
-    event.res.statusMessage = "No Content.";
-    return "OK";
-  }
-  const date = getRouterParam(event, "date");
-  const dateIn10Days = new Date(new Date(date).getTime() + 10 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
-  
-  let record: RecordModel;
-  let res = await pb
-    .collection("occasion")
-    .getList(1, 10, {
-      filter: `date >= "${date}" && date <= "${dateIn10Days}"`,
-      expand: 'copticDate,facts,icons,stories,icons.story,notables,notables.copticDate,notables.facts,notables.icons,notables.stories,notables.icons,notables.icons.story',
-    });
-  if (res.totalItems == 0) {
-    return {
-      status: 404,
-      statusText: "Not Found",
-    };
-  }
-  
-  record = res.items[0];
-  let formattedRecord = await formatRecord(record);
-
-  let notables = [];
-  for (let i = 0; i < res.items.length; i++) {
-    if (res.items[i].notables.length > 0) {
-      notables = notables.concat(res.items[i].expand.notables);
-    }
+  if (getMethod(event) === 'OPTIONS') {
+    event.res.statusCode    = 204;
+    event.res.statusMessage = 'No Content.';
+    return 'OK';
   }
 
-  if (notables.length > 0) {
-    formattedRecord.notables = notables
+  /* ----------  Validate YYYY-MM-DD  ---------- */
+  const param = getRouterParam(event, 'date');            // e.g. “2025-04-10”
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(param ?? '')) {
+    return { status: 400, statusText: 'Bad date format (YYYY-MM-DD expected)' };
   }
 
+  /* ----------  Build PocketBase-friendly range strings  ---------- */
+  // NB: PocketBase stores "2025-04-10 00:00:00.000Z" (space, not “T”)
+  const startPB = `${param} 00:00:00.000Z`;
+  const endPB   = `${param} 23:59:59.999Z`;
+
+  const expand = [
+    'copticDate',
+    'facts',
+    'icons',
+    'stories',
+    'icons.story',
+    'notables',
+    'notables.copticDate',
+    'notables.facts',
+    'notables.icons',
+    'notables.stories',
+    'notables.icons.story',
+  ].join(',');
+
+  /* ----------  Query PocketBase  ---------- */
+  const res = await pb.collection('occasion').getList(1, 1, {
+    filter : `date >= "${startPB}" && date <= "${endPB}"`,
+    sort   : '+date',                                     // earliest first
+    expand,
+  });
+
+  if (res.totalItems === 0) {
+    return { status: 404, statusText: 'Not Found' };
+  }
+
+  /* ----------  Format & merge notables  ---------- */
+  const record          = res.items[0] as RecordModel;
+  const formattedRecord = await formatRecord(record);
+
+  if (record.notables?.length) {
+    formattedRecord.notables = record.expand?.notables ?? [];
+  }
+
+  /* ----------  Done  ---------- */
   return {
-    data: formattedRecord,
-    status: 200,
-    statusText: "OK",
+    data       : formattedRecord,
+    status     : 200,
+    statusText : 'OK',
   };
 });
