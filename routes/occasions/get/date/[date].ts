@@ -5,7 +5,7 @@ import formatRecord from '../../../../utils/formatRecord';
 
 /**
  * GET /occasions/get/date/:date   (YYYY-MM-DD)
- * Returns the occasion whose `date` field falls on that UTC day.
+ * Returns the occasion on that date, with notables merged from a 10-day range.
  */
 export default defineEventHandler(async (event) => {
   /* ----------  CORS pre-flight  ---------- */
@@ -22,17 +22,20 @@ export default defineEventHandler(async (event) => {
     return 'OK';
   }
 
-  /* ----------  Validate YYYY-MM-DD  ---------- */
-  const param = getRouterParam(event, 'date');            // e.g. “2025-04-10”
+  /* ----------  Validate YYYY-MM-DD ---------- */
+  const param = getRouterParam(event, 'date');
   if (!/^\d{4}-\d{2}-\d{2}$/.test(param ?? '')) {
     return { status: 400, statusText: 'Bad date format (YYYY-MM-DD expected)' };
   }
 
-  /* ----------  Build PocketBase-friendly range strings  ---------- */
-  // NB: PocketBase stores "2025-04-10 00:00:00.000Z" (space, not “T”)
+  /* ----------  Build 10-day range ---------- */
   const startPB = `${param} 00:00:00.000Z`;
-  const endPB   = `${param} 23:59:59.999Z`;
+  const endDate = new Date(new Date(param).getTime() + 10 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split('T')[0];
+  const endPB = `${endDate} 23:59:59.999Z`;
 
+  /* ----------  Expand fields ---------- */
   const expand = [
     'copticDate',
     'facts',
@@ -47,10 +50,10 @@ export default defineEventHandler(async (event) => {
     'notables.icons.story',
   ].join(',');
 
-  /* ----------  Query PocketBase  ---------- */
-  const res = await pb.collection('occasion').getList(1, 1, {
-    filter : `date >= "${startPB}" && date <= "${endPB}"`,
-    sort   : '+date',                                     // earliest first
+  /* ----------  Query PocketBase ---------- */
+  const res = await pb.collection('occasion').getList(1, 100, {
+    filter: `date >= "${startPB}" && date <= "${endPB}"`,
+    sort: '+date',
     expand,
   });
 
@@ -58,18 +61,23 @@ export default defineEventHandler(async (event) => {
     return { status: 404, statusText: 'Not Found' };
   }
 
-  /* ----------  Format & merge notables  ---------- */
-  const record          = res.items[0] as RecordModel;
+  /* ----------  Format the first occasion ---------- */
+  const record = res.items[0] as RecordModel;
   const formattedRecord = await formatRecord(record);
 
-  if (record.notables?.length) {
-    formattedRecord.notables = record.expand?.notables ?? [];
+  /* ----------  Aggregate notables from all items ---------- */
+  let notables = [];
+  for (let i = 0; i < res.items.length; i++) {
+    const expandedNotables = res.items[i].expand?.notables ?? [];
+    notables = notables.concat(expandedNotables);
   }
 
-  /* ----------  Done  ---------- */
+  formattedRecord.notables = notables;
+
+  /* ----------  Done ---------- */
   return {
-    data       : formattedRecord,
-    status     : 200,
-    statusText : 'OK',
+    data: formattedRecord,
+    status: 200,
+    statusText: 'OK',
   };
 });
