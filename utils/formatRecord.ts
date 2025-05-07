@@ -12,9 +12,17 @@ import { RecordModel } from "pocketbase";
  */
 export default async function formatRecord(
   record: RecordModel
-  // upcoming: boolean,
 ): Promise<Data> {
-  let formattedRecord = {
+  let readings = null;
+
+  try {
+    readings = await getReadings(new Date(record.date));
+  } catch (error) {
+    console.error("Failed to fetch readings:", error);
+    readings = null; // or []
+  }
+
+  const formattedRecord = {
     created: new Date(record.created),
     date: new Date(record.date),
     copticDate: {
@@ -33,7 +41,7 @@ export default async function formatRecord(
     liturgicalInformation: record.liturgicalInformation,
     name: record.name,
     updated: new Date(record.updated),
-    readings: await getReadings(new Date(record.date)),
+    readings,
     notables: record.expand.notables,
   };
 
