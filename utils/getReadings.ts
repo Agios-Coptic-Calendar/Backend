@@ -1,56 +1,78 @@
-export function createURL(date) {
-  let base = "https://api.katameros.app";
-  let calendar = "gregorian";
-  let dd_mm_yyyy;
-  let dd = date.getDate();
-  let mm = date.getMonth() + 1;
-  let yyyy = date.getFullYear();
-  if (dd < 10) {
-    dd = "0" + dd;
-  }
-  if (mm < 10) {
-    mm = "0" + mm;
-  }
-  dd_mm_yyyy = `${dd}-${mm}-${yyyy}`;
-  let languageId = "2";
-  let bibleId = "2";
-  let url = `${base}/readings/${calendar}/${dd_mm_yyyy}?languageId=${languageId}&bibleId=${bibleId}`;
-  return url;
+/*  utils/getReadings.ts  */
+
+export function createURL(date: Date): string {
+  const base      = 'https://api.katameros.app'
+  const calendar  = 'gregorian'
+  const dd        = String(date.getDate()).padStart(2, '0')
+  const mm        = String(date.getMonth() + 1).padStart(2, '0')
+  const yyyy      = date.getFullYear()
+  const languageId = '2'
+  const bibleId    = '2'
+
+  return `${base}/readings/${calendar}/${dd}-${mm}-${yyyy}` +
+         `?languageId=${languageId}&bibleId=${bibleId}`
 }
 
-export async function getReadings(date) {
-  let url = createURL(date);
-  let response = await fetch(url);
-  let data = await response.json();
-  data = data.sections;
+/**
+ * Fetches and normalises Katameros readings.
+ * If the upstream service is down or returns non-JSON, we return []
+ * so callers can decide how to degrade gracefully.
+ */
+export async function getReadings(date: Date) {
+  const url = createURL(date)
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), 5000) // 5-second hard timeout
 
-  for (let i = 0; i < data.length; i++) {
-    let section = data[i];
-    if (section.title == "Liturgy") {
-      let subRead = section.subSections;
-      for (let j = 0; j < subRead.length; j++) {
-        if (subRead[j].title == "Synaxarium") {
-          subRead.splice(j, 1);
-        }
-      }
+  try {
+    const res = await fetch(url, {
+      signal : controller.signal,
+      headers: { Accept: 'application/json' }
+    })
+
+    /* ----------  network / HTTP errors ---------- */
+    if (!res.ok) {
+      console.error(`Katameros API ${res.status}: ${res.statusText}`)
+      return []
     }
-    for (let j = 0; j < section.subSections.length; j++) {
-      let subSection = section.subSections[j];
 
-      for (let k = 0; k < subSection.readings.length; k++) {
-        let reading = subSection.readings[k];
-        if (reading.passages.length > 1) {
-          // merge all passages into one passage
-          let passage = reading.passages[0];
-          for (let l = 1; l < reading.passages.length; l++) {
-            passage.ref = `${passage.ref} & ${reading.passages[l].ref}`;
-            passage.verses = [...passage.verses, ...reading.passages[l].verses];
+    /* ----------  wrong content-type (Cloudflare HTML, etc.) ---------- */
+    const cType = res.headers.get('content-type') ?? ''
+    if (!cType.includes('application/json')) {
+      const snippet = (await res.text()).slice(0, 120)
+      console.error(`Katameros returned non-JSON (${cType}): ${snippet}`)
+      return []
+    }
+
+    /* ----------  happy path ---------- */
+    const { sections = [] } = await res.json()
+
+    // original post-processing (unchanged except for minor refactor)
+    for (const section of sections) {
+      if (section.title === 'Liturgy') {
+        section.subSections = section.subSections.filter(
+          (s: any) => s.title !== 'Synaxarium'
+        )
+      }
+
+      for (const sub of section.subSections) {
+        for (const reading of sub.readings) {
+          if (reading.passages.length > 1) {
+            const first = reading.passages[0]
+            for (let i = 1; i < reading.passages.length; i++) {
+              first.ref    = `${first.ref} & ${reading.passages[i].ref}`
+              first.verses = [...first.verses, ...reading.passages[i].verses]
+            }
+            reading.passages = [first]
           }
-          reading.passages = [passage];
         }
       }
     }
 
+    return sections
+  } catch (err) {
+    console.error('Katameros fetch failed:', err)
+    return []          // graceful degradation
+  } finally {
+    clearTimeout(timer)
   }
-  return data;
 }
